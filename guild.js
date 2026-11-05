@@ -1,0 +1,1 @@
+window.GUILD = {"events":[{"id":1,"title":"Forever Starts","description":"Nawalamy od 1 lvla do upadłego","startsAt":1793833260,"posted":1,"signups":[{"status":"yes","player":"Serq","character":"Serq Endfall","class":"Rogue","role":"dps"}]}],"characters":[{"id":1,"name":"Serq Endfall","class":"Rogue","role":"dps","hk":0,"main":1,"player":"Serq"}],"discord":""};
