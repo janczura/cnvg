@@ -3,48 +3,123 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c0709">
 <title>Castle Nathria VIP Guest</title>
-<!-- The guild's page on GitHub Pages. Data: guild.js (window.GUILD) - pushed by GuildManager every minute
-     when something changed. It's a script, not a .json, so the page also works opened straight from disk. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1l5 7-5 7-5-7z' fill='%23a3162f' stroke='%23c9a45c'/%3E%3C/svg%3E">
+<!-- site/index.html in the Castle Nathria look: the same guild.js and the same script, only the style differs.
+     When guild.js changes, change both. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cinzel+Decorative:wght@700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
   color-scheme: dark;
-  --bg: #12110f; --surface: #1b1916; --surface-2: #24211c; --line: #322e27; --line-2: #463f34;
-  --text: #ede6d6; --muted: #9a9284; --accent: #e3b341; --radius: 8px;
+  --bg: #0c0709; --surface: #170c10; --surface-2: #1f0f15; --line: #3a1d24;
+  --gold: #c9a45c; --gold-light: #f3dca0; --gold-dim: #7d6237;
+  --crimson: #a3162f; --crimson-light: #d4344f;
+  --text: #ecdfcb; --muted: #a39282;
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 Inter, system-ui, sans-serif; }
-header { border-top: 3px solid var(--accent); border-bottom: 1px solid var(--line); background: var(--surface); }
-header div, main { max-width: 1000px; margin: 0 auto; padding: 16px; }
-header div { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
-.discord { padding: 6px 14px; border-radius: 6px; background: #5865f2; color: #fff; font-weight: 600; text-decoration: none; }
-.discord:hover { background: #4752c4; }
-.discord:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-h1 { margin: 0; font-size: 22px; }
-h2 { font-size: 17px; margin: 32px 0 12px; }
+[hidden] { display: none !important; }
+body {
+  margin: 0; color: var(--text); font: 17px/1.55 "EB Garamond", Georgia, serif;
+  background:
+    radial-gradient(ellipse 90% 45% at 50% -8%, rgb(163 22 47 / .38), transparent 70%),
+    radial-gradient(ellipse 70% 40% at 50% 108%, rgb(90 20 60 / .28), transparent 70%),
+    /* a faint diamond lattice, like the castle's leaded windows */
+    repeating-linear-gradient(45deg, rgb(201 164 92 / .035) 0 1px, transparent 1px 34px),
+    repeating-linear-gradient(-45deg, rgb(201 164 92 / .035) 0 1px, transparent 1px 34px),
+    var(--bg);
+  background-attachment: fixed;
+}
+a { color: var(--gold); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 .muted { color: var(--muted); }
-.panel { padding: 14px 16px; margin-bottom: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
-.panel h3 { margin: 0; font-size: 16px; }
-.when { color: var(--accent); font-size: 14px; }
-.desc { white-space: pre-wrap; margin: 8px 0 0; }
-.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px; }
-.cols ul { margin: 4px 0 0; padding-left: 18px; }
-summary { cursor: pointer; color: var(--muted); }
-.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
-table { border-collapse: collapse; width: 100%; font-size: 14px; }
-th, td { padding: 7px 12px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
-thead th { background: var(--surface-2); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+
+header { text-align: center; padding: 44px 16px 28px; }
+.sigil { width: 52px; color: var(--gold); filter: drop-shadow(0 0 10px rgb(163 22 47 / .7)); }
+.kicker { margin: 10px 0 0; font: 500 12px/1 Cinzel, serif; letter-spacing: .35em; text-transform: uppercase; color: var(--muted); }
+h1 {
+  margin: 10px 0 0; font: 700 clamp(34px, 8vw, 64px)/1.05 "Cinzel Decorative", Cinzel, serif;
+  background: linear-gradient(180deg, var(--gold-light), var(--gold) 55%, var(--gold-dim));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 22px rgb(163 22 47 / .55));
+}
+.guest { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 12px auto 0; max-width: 360px;
+  font: 700 15px/1 Cinzel, serif; letter-spacing: .5em; text-transform: uppercase; color: var(--crimson-light); }
+.guest::before, .guest::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold-dim)); }
+.guest::after { background: linear-gradient(to left, transparent, var(--gold-dim)); }
+.discord { display: inline-block; margin-top: 24px; padding: 11px 24px; text-decoration: none;
+  font: 700 13px/1 Cinzel, serif; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-light);
+  background: linear-gradient(180deg, #b01d38, #6e0f20); border: 1px solid var(--gold);
+  box-shadow: 0 0 0 3px rgb(201 164 92 / .14), 0 8px 24px rgb(163 22 47 / .45); }
+.discord:hover { background: linear-gradient(180deg, #c8274a, #841329); color: #fff; }
+
+main { max-width: 1000px; margin: 0 auto; padding: 0 16px 40px; }
+h2 { display: flex; align-items: center; gap: 16px; margin: 40px 0 18px;
+  font: 700 17px/1.2 Cinzel, serif; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
+h2::before, h2::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold-dim)); }
+h2::after { background: linear-gradient(to left, transparent, var(--gold-dim)); }
+.hint { text-align: center; font-style: italic; color: var(--muted); }
+
+/* An event is an invitation card: a double gold frame with a gem on top. */
+.card { position: relative; margin-bottom: 22px; padding: 22px 24px 18px;
+  background: linear-gradient(180deg, #1d0e14, #12080b); border: 1px solid var(--gold-dim);
+  outline: 1px solid rgb(201 164 92 / .22); outline-offset: -7px;
+  box-shadow: 0 12px 32px rgb(0 0 0 / .55), inset 0 0 48px rgb(163 22 47 / .13); }
+.card::before { content: "◆"; position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
+  padding: 0 8px; background: var(--bg); color: var(--crimson-light); font-size: 13px; line-height: 1; }
+.card h3 { margin: 0; font: 700 21px/1.25 Cinzel, serif; color: var(--text); }
+.when { margin-top: 2px; font-style: italic; color: var(--gold); }
+.desc { white-space: pre-wrap; margin: 10px 0 0; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 20px;
+  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.cols b { font: 700 12px/1.4 Cinzel, serif; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
+.cols ul { list-style: none; margin: 6px 0 0; padding: 0; }
+.cols li::before { content: "◆"; margin-right: 8px; font-size: 8px; vertical-align: 3px; color: var(--crimson-light); }
+.roles { margin: 10px 0 0; font-size: 15px; color: var(--muted); }
+
+details summary { cursor: pointer; text-align: center; font-style: italic; color: var(--muted); margin-bottom: 18px; }
+details summary:hover { color: var(--gold); }
+
+.table-wrap { overflow-x: auto; background: rgb(23 12 16 / .88); border: 1px solid var(--gold-dim);
+  box-shadow: 0 12px 32px rgb(0 0 0 / .5); }
+table { border-collapse: collapse; width: 100%; font-size: 16px; }
+th, td { padding: 8px 14px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+thead th { background: var(--surface-2); border-bottom-color: var(--gold-dim);
+  font: 700 11px/1.2 Cinzel, serif; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
 tbody tr:last-child > * { border-bottom: 0; }
+tbody tr:hover { background: rgb(163 22 47 / .12); }
 .num { text-align: right; font-variant-numeric: tabular-nums; }
-.tag { font-size: 10px; font-weight: 600; text-transform: uppercase; padding: 1px 6px; border-radius: 4px; margin-left: 4px;
-  background: var(--surface-2); border: 1px solid var(--line-2); color: var(--muted); vertical-align: 1px; }
+.rank { color: var(--muted); }
+tbody tr:nth-child(-n+3) .rank { color: var(--gold); font-weight: 600; } /* top 3 by HK */
+.tag { margin-left: 6px; padding: 1px 6px; vertical-align: 2px; border: 1px solid var(--gold-dim);
+  font: 700 10px/1.4 Cinzel, serif; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+.tag.main { background: var(--crimson); border-color: var(--crimson-light); color: var(--gold-light); }
+
+footer { padding: 28px 16px 36px; text-align: center; font: 500 11px/1.6 Cinzel, serif; letter-spacing: .25em;
+  text-transform: uppercase; color: var(--gold-dim); }
+
+/* WoW class colors */
 .c-Warrior { color: #c69b6d; } .c-Paladin { color: #f48cba; } .c-Hunter { color: #aad372; } .c-Rogue { color: #fff468; }
 .c-Priest { color: #ffffff; } .c-Shaman { color: #0070dd; } .c-Mage { color: #3fc7eb; } .c-Warlock { color: #8788ee; } .c-Druid { color: #ff7c0a; }
 </style>
 </head>
 <body>
-<header><div><h1>Guild</h1><a id="discord" class="discord" hidden>Join us on Discord</a></div></header>
-<main id="app"><p class="muted">Loading…</p></main>
+<header>
+  <svg class="sigil" viewBox="0 0 64 80" aria-hidden="true">
+    <path d="M8 78V36Q8 14 32 2Q56 14 56 36V78" fill="none" stroke="currentColor" stroke-width="2.5"/>
+    <path d="M16 78V38Q16 22 32 12Q48 22 48 38V78" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/>
+    <path d="M32 27L40 41L32 55L24 41Z" fill="#a3162f" stroke="currentColor" stroke-width="1.5"/>
+    <path d="M32 55V78M2 78H62" stroke="currentColor" stroke-width="2.5"/>
+  </svg>
+  <p class="kicker">Revendreth · By invitation only</p>
+  <h1>Castle Nathria</h1>
+  <p class="guest">VIP Guest</p>
+  <a id="discord" class="discord" hidden>Join us on Discord</a>
+</header>
+<main id="app"><p class="hint">Loading…</p></main>
+<footer>Castle Nathria VIP Guest · World of Warcraft: Forever</footer>
 <script>
 // Names come from Discord: everything from the data goes through esc().
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => `&#${c.charCodeAt(0)};`);
@@ -60,36 +135,36 @@ function render({ events, characters, discord }) {
   const upcoming = events.filter(e => e.startsAt >= now), past = events.filter(e => e.startsAt < now).reverse();
   const card = e => {
     const yes = e.signups.filter(s => s.status === 'yes');
-    return `<div class="panel">
+    return `<div class="card">
       <h3>${esc(e.title)}</h3><div class="when">${date(e.startsAt)}</div>
       ${e.description ? `<p class="desc">${esc(e.description)}</p>` : ''}
       <div class="cols">${STATUS.map(([status, label]) => {
         const list = e.signups.filter(s => s.status === status);
         return `<div><b>${label} (${list.length})</b><ul>${list.map(s => `<li>${who(s)}</li>`).join('')}</ul></div>`;
       }).join('')}</div>
-      ${yes.length ? `<p class="muted" style="margin: 6px 0 0">${['tank', 'heal', 'dps'].map(r => `${ROLES[r]} ${yes.filter(s => s.role === r).length}`).join(' · ')}</p>` : ''}
+      ${yes.length ? `<p class="roles">${['tank', 'heal', 'dps'].map(r => `${ROLES[r]} ${yes.filter(s => s.role === r).length}`).join(' · ')}</p>` : ''}
     </div>`;
   };
   document.getElementById('app').innerHTML = `
     <h2>Upcoming events</h2>
-    ${upcoming.map(card).join('') || '<p class="muted">No events planned.</p>'}
-    <p class="muted">Sign up on Discord, with the buttons under the event's post.</p>
+    ${upcoming.map(card).join('') || '<p class="hint">No events planned.</p>'}
+    <p class="hint">Sign up on Discord, with the buttons under the event's post.</p>
     <h2>Characters</h2>
     <div class="table-wrap"><table>
       <thead><tr><th class="num">#</th><th>Character</th><th>Class</th><th>Role</th><th>Professions</th><th class="num">HK</th><th>Player</th></tr></thead>
-      <tbody>${characters.map((c, i) => `<tr><td class="num muted">${i + 1}</td>
-        <td>${c.main ? `<b>${character(c.name, c.class)}</b><span class="tag">main</span>` : character(c.name, c.class)}</td>
+      <tbody>${characters.map((c, i) => `<tr><td class="num rank">${i + 1}</td>
+        <td>${c.main ? `<b>${character(c.name, c.class)}</b><span class="tag main">main</span>` : character(c.name, c.class)}</td>
         <td>${esc(c.class)}</td><td>${ROLES[c.role] ?? ''}</td><td>${esc(c.professions)}</td><td class="num">${Number(c.hk)}</td><td>${esc(c.player)}</td></tr>`).join('')
         || '<tr><td colspan="7" class="muted">No one has added a character yet (on Discord: /character add).</td></tr>'}</tbody>
     </table></div>
-    ${past.length ? `<h2>Past events</h2><details><summary>Show (${past.length})</summary><div style="margin-top: 10px">${past.map(card).join('')}</div></details>` : ''}`;
+    ${past.length ? `<h2>Past events</h2><details><summary>Show (${past.length})</summary>${past.map(card).join('')}</details>` : ''}`;
 }
 
 // Loaded by hand with a query string: GitHub Pages lets browsers cache files for 10 minutes.
 const script = document.createElement('script');
 script.src = 'guild.js?' + Date.now();
 script.onload = () => render(window.GUILD);
-script.onerror = () => { document.getElementById('app').innerHTML = '<p class="muted">No data (guild.js).</p>'; };
+script.onerror = () => { document.getElementById('app').innerHTML = '<p class="hint">No data (guild.js).</p>'; };
 document.head.append(script);
 </script>
 </body>
