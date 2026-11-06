@@ -103,6 +103,7 @@ footer { padding: 28px 16px 36px; text-align: center; font: 500 11px/1.6 Cinzel,
 /* WoW class colors */
 .c-Warrior { color: #c69b6d; } .c-Paladin { color: #f48cba; } .c-Hunter { color: #aad372; } .c-Rogue { color: #fff468; }
 .c-Priest { color: #ffffff; } .c-Shaman { color: #0070dd; } .c-Mage { color: #3fc7eb; } .c-Warlock { color: #8788ee; } .c-Druid { color: #ff7c0a; }
+.prof { width: 20px; height: 20px; border-radius: 3px; vertical-align: middle; margin-right: 3px; }
 </style>
 </head>
 <body>
@@ -127,6 +128,12 @@ const ROLES = { tank: 'Tank', heal: 'Heal', dps: 'DPS' };
 const STATUS = [['yes', 'Going'], ['maybe', 'Maybe'], ['no', 'Not going']];
 const date = t => new Date(t * 1000).toLocaleString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
 const character = (name, cls) => `<span class="c-${esc(cls)}">${esc(name)}</span>`;
+// Profession icons (Bot.PROFESSIONS) from Wowhead's CDN; the name shows on hover.
+const ICONS = { Alchemy: 'trade_alchemy', Blacksmithing: 'trade_blacksmithing', Enchanting: 'trade_engraving',
+  Engineering: 'trade_engineering', Herbalism: 'spell_nature_naturetouchgrow', Leatherworking: 'inv_misc_armorkit_17',
+  Mining: 'trade_mining', Skinning: 'inv_misc_pelt_wolf_01', Tailoring: 'trade_tailoring', Cooking: 'inv_misc_food_15',
+  'First Aid': 'spell_holy_sealofsacrifice', Fishing: 'trade_fishing' };
+const professions = p => (p ? p.split(', ') : []).map(n => `<img class="prof" src="https://wow.zamimg.com/images/wow/icons/medium/${ICONS[n] ?? 'inv_misc_questionmark'}.jpg" alt="${esc(n)}" title="${esc(n)}">`).join('');
 const who = s => esc(s.player) + (s.character ? ` · ${character(s.character, s.class)}` : '') + (s.role ? `<span class="tag">${ROLES[s.role] ?? ''}</span>` : '');
 
 function render({ events, characters, discord }) {
@@ -154,7 +161,7 @@ function render({ events, characters, discord }) {
       <thead><tr><th class="num">#</th><th>Character</th><th>Class</th><th>Role</th><th>Professions</th><th class="num">Total HK</th><th class="num">World HK</th><th>Player</th></tr></thead>
       <tbody>${characters.map((c, i) => `<tr><td class="num rank">${i + 1}</td>
         <td>${c.main ? `<b>${character(c.name, c.class)}</b><span class="tag main">main</span>` : character(c.name, c.class)}</td>
-        <td>${esc(c.class)}</td><td>${ROLES[c.role] ?? ''}</td><td>${esc(c.professions)}</td><td class="num">${Number(c.hk)}</td><td class="num">${Number(c.world_hk)}</td><td>${esc(c.player)}</td></tr>`).join('')
+        <td>${esc(c.class)}</td><td>${ROLES[c.role] ?? ''}</td><td>${professions(c.professions)}</td><td class="num">${Number(c.hk)}</td><td class="num">${Number(c.world_hk)}</td><td>${esc(c.player)}</td></tr>`).join('')
         || '<tr><td colspan="8" class="muted">No one has added a character yet (on Discord: /character add).</td></tr>'}</tbody>
     </table></div>
     ${past.length ? `<h2>Past events</h2><details><summary>Show (${past.length})</summary>${past.map(card).join('')}</details>` : ''}`;
