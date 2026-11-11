@@ -32,7 +32,7 @@ body {
     var(--bg);
   background-attachment: fixed;
 }
-a { color: var(--gold); }
+a { color: var(--gold); overflow-wrap: anywhere; }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 .muted { color: var(--muted); }
 
@@ -142,6 +142,7 @@ const who = s => esc(s.player) + (s.character ? ` · ${character(s.character, s.
 
 function render({ events, characters, discord, recruiting }) {
   if (discord) Object.assign(document.getElementById('discord'), { href: discord, hidden: false });
+  const ics = new URL('guild.ics', location.href).href; // pushed with guild.js
   const now = Date.now() / 1000;
   const upcoming = events.filter(e => e.startsAt >= now), past = events.filter(e => e.startsAt < now).reverse();
   const card = e => {
@@ -163,6 +164,8 @@ function render({ events, characters, discord, recruiting }) {
     <h2>Upcoming events</h2>
     ${upcoming.map(card).join('') || '<p class="hint">No events planned.</p>'}
     <p class="hint">Sign up on Discord, with the buttons under the event's post.</p>
+    <p class="hint">Events in your own calendar: add <a href="${esc(ics)}">${esc(ics)}</a> as a calendar from URL
+      (Google Calendar: Other calendars → From URL; Proton Calendar: Add calendar from URL).</p>
     <h2>Characters</h2>
     <div class="table-wrap"><table>
       <thead><tr><th class="num">#</th><th>Character</th><th class="num">Level</th><th>Class</th><th>Role</th><th>Professions</th><th class="num">Total HK</th><th class="num">World HK</th><th>Player</th></tr></thead>
