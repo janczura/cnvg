@@ -134,6 +134,9 @@
     Mining: 'trade_mining', Skinning: 'inv_misc_pelt_wolf_01', Tailoring: 'trade_tailoring', Cooking: 'inv_misc_food_15',
     'First Aid': 'spell_holy_sealofsacrifice', Fishing: 'trade_fishing' };
   const professions = p => (p ? p.split(', ') : []).map(n => `<img class="prof" src="https://wow.zamimg.com/images/wow/icons/medium/${ICONS[n.replace(/ \d+$/, '')] ?? 'inv_misc_questionmark'}.jpg" alt="${esc(n)}" title="${esc(n)}">`).join('');
+  const CLASSES = ['Warrior', 'Paladin', 'Hunter', 'Rogue', 'Priest', 'Shaman', 'Mage', 'Warlock', 'Druid'];
+  const classCount = list => CLASSES.map(c => [c, list.filter(s => s.class === c).length]).filter(([, n]) => n)
+          .map(([c, n]) => `<span class="c-${c}">${c}</span> ${n}`).join(' · ');
   const who = s => esc(s.player) + (s.character ? ` · ${character(s.character, s.class)}` : '') + (s.role ? `<span class="tag">${ROLES[s.role] ?? ''}</span>` : '');
 
   function render({ events, characters, discord }) {
@@ -144,12 +147,14 @@
       const yes = e.signups.filter(s => s.status === 'yes');
       return `<div class="card">
       <h3>${esc(e.title)}</h3><div class="when">${date(e.startsAt)}</div>
+      <h3>${esc(e.title)}</h3><div class="when">${date(e.startsAt)}${e.minLevel ? ` · level ${Number(e.minLevel)}+` : ''}</div>
       ${e.description ? `<p class="desc">${esc(e.description)}</p>` : ''}
       <div class="cols">${STATUS.map(([status, label]) => {
         const list = e.signups.filter(s => s.status === status);
         return `<div><b>${label} (${list.length})</b><ul>${list.map(s => `<li>${who(s)}</li>`).join('')}</ul></div>`;
       }).join('')}</div>
       ${yes.length ? `<p class="roles">${['tank', 'heal', 'dps'].map(r => `${ROLES[r]} ${yes.filter(s => s.role === r).length}`).join(' · ')}</p>` : ''}
+      ${yes.length ? `<p class="roles">${['tank', 'heal', 'dps'].map(r => `${ROLES[r]} ${yes.filter(s => s.role === r).length}`).join(' · ')}<br>${classCount(yes)}</p>` : ''}
     </div>`;
     };
     document.getElementById('app').innerHTML = `
@@ -159,20 +164,24 @@
     <h2>Characters</h2>
     <div class="table-wrap"><table>
       <thead><tr><th class="num">#</th><th>Character</th><th>Class</th><th>Role</th><th>Professions</th><th class="num">Total HK</th><th class="num">World HK</th><th>Player</th></tr></thead>
+      <thead><tr><th class="num">#</th><th>Character</th><th class="num">Level</th><th>Class</th><th>Role</th><th>Professions</th><th class="num">Total HK</th><th class="num">World HK</th><th>Player</th></tr></thead>
       <tbody>${characters.map((c, i) => `<tr><td class="num rank">${i + 1}</td>
         <td>${c.main ? `<b>${character(c.name, c.class)}</b><span class="tag main">main</span>` : character(c.name, c.class)}</td>
         <td>${esc(c.class)}</td><td>${ROLES[c.role] ?? ''}</td><td>${professions(c.professions)}</td><td class="num">${Number(c.hk)}</td><td class="num">${Number(c.world_hk)}</td><td>${esc(c.player)}</td></tr>`).join('')
     || '<tr><td colspan="8" class="muted">No one has added a character yet (on Discord: /character add).</td></tr>'}</tbody>
-    </table></div>
-    ${past.length ? `<h2>Past events</h2><details><summary>Show (${past.length})</summary>${past.map(card).join('')}</details>` : ''}`;
-  }
+        <td class="num">${c.level == null ? '' : Number(c.level)}</td><td>${esc(c.class)}</td><td>${ROLES[c.role] ?? ''}</td><td>${professions(c.professions)}</td><td class="num">${Number(c.hk)}</td><td class="num">${Number(c.world_hk)}</td><td>${esc(c.player)}</td></tr>`).join('')
+    || '<tr><td colspan="9" class="muted">No one has added a character yet (on Discord: /character add).</td></tr>'}</tbody>
+  </table></div>
+  ${past.length ? `<h2>Past events</h2><details><summary>Show (${past.length})</summary>${past.map(card).join('')}</details>` : ''}`;
+}
 
-  // Loaded by hand with a query string: GitHub Pages lets browsers cache files for 10 minutes.
-  const script = document.createElement('script');
-  script.src = 'guild.js?' + Date.now();
-  script.onload = () => render(window.GUILD);
-  script.onerror = () => { document.getElementById('app').innerHTML = '<p class="hint">No data (guild.js).</p>'; };
-  document.head.append(script);
+// Loaded by hand with a query string: GitHub Pages lets browsers cache files for 10 minutes.
+const script = document.createElement('script');
+script.src = 'guild.js?' + Date.now();
+script.onload = () => render(window.GUILD);
+script.onerror = () => { document.getElementById('app').innerHTML = '<p class="hint">No data (guild.js).</p>'; };
+document.head.append(script);
 </script>
 </body>
 </html>
+
