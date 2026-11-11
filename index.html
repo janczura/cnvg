@@ -137,9 +137,10 @@ const professions = p => (p ? p.split(', ') : []).map(n => `<img class="prof" sr
 const CLASSES = ['Warrior', 'Paladin', 'Hunter', 'Rogue', 'Priest', 'Shaman', 'Mage', 'Warlock', 'Druid'];
 const classCount = list => CLASSES.map(c => [c, list.filter(s => s.class === c).length]).filter(([, n]) => n)
   .map(([c, n]) => `<span class="c-${c}">${c}</span> ${n}`).join(' · ');
-const who = s => esc(s.player) + (s.character ? ` · ${character(s.character, s.class)}` : '') + (s.role ? `<span class="tag">${ROLES[s.role] ?? ''}</span>` : '');
+const who = s => esc(s.player) + (s.character ? ` · ${character(s.character, s.class)}` : '') + (s.role ? `<span class="tag">${ROLES[s.role] ?? ''}</span>` : '')
+  + (s.note ? ` <i class="muted">- ${esc(s.note)}</i>` : '');
 
-function render({ events, characters, discord }) {
+function render({ events, characters, discord, recruiting }) {
   if (discord) Object.assign(document.getElementById('discord'), { href: discord, hidden: false });
   const now = Date.now() / 1000;
   const upcoming = events.filter(e => e.startsAt >= now), past = events.filter(e => e.startsAt < now).reverse();
@@ -156,6 +157,9 @@ function render({ events, characters, discord }) {
     </div>`;
   };
   document.getElementById('app').innerHTML = `
+    ${recruiting && (recruiting.classes.length || recruiting.roles.length) ? `<h2>Recruiting</h2>
+    <p class="hint">We're looking for ${[...recruiting.classes.filter(c => CLASSES.includes(c)).map(c => `<span class="c-${c}">${c}</span>`),
+      ...recruiting.roles.map(r => esc(ROLES[r] ?? r))].join(' · ')} - join our Discord and type <b>/apply</b>.</p>` : ''}
     <h2>Upcoming events</h2>
     ${upcoming.map(card).join('') || '<p class="hint">No events planned.</p>'}
     <p class="hint">Sign up on Discord, with the buttons under the event's post.</p>
