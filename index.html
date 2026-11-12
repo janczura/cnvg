@@ -3,178 +3,209 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0c0709">
+<meta name="theme-color" content="#0e0a11">
 <title>Castle Nathria VIP Guest</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1l5 7-5 7-5-7z' fill='%23a3162f' stroke='%23c9a45c'/%3E%3C/svg%3E">
-<!-- site/index.html in the Castle Nathria look: the same guild.js and the same script, only the style differs.
-     When guild.js changes, change both. -->
+<!-- site/index.html in the Castle Nathria look ("VIP Pass"): the same guild.js and the same data, shown as a club poster -
+     every event is a ticket with a date stub, sign-ups grouped by role, the top 3 by HK above the table. When guild.js changes, change both. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cinzel+Decorative:wght@700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,600;1,400&family=Big+Shoulders+Display:wght@700;800;900&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
 <style>
+/* Layout: a club-poster header with a stamped VIP badge; each event a perforated ticket (date stub left); the three highest HK as passes above the guest list. */
 :root {
   color-scheme: dark;
-  --bg: #0c0709; --surface: #170c10; --surface-2: #1f0f15; --line: #3a1d24;
-  --gold: #c9a45c; --gold-light: #f3dca0; --gold-dim: #7d6237;
-  --crimson: #a3162f; --crimson-light: #d4344f;
-  --text: #ecdfcb; --muted: #a39282;
+  --night: #0e0a11; --velvet: #1a1020; --line: #2e2234;
+  --ticket: #84142a; --ticket-deep: #4c0a18; --foil: #e9c57d; --bone: #f3e9e5; --muted: #a797a5;
+  --gothic: "UnifrakturCook", "Old English Text MT", serif;
+  --cond: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "Barlow", "Segoe UI", system-ui, sans-serif;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-body {
-  margin: 0; color: var(--text); font: 17px/1.55 "EB Garamond", Georgia, serif;
-  background:
-    radial-gradient(ellipse 90% 45% at 50% -8%, rgb(163 22 47 / .38), transparent 70%),
-    radial-gradient(ellipse 70% 40% at 50% 108%, rgb(90 20 60 / .28), transparent 70%),
-    /* a faint diamond lattice, like the castle's leaded windows */
-    repeating-linear-gradient(45deg, rgb(201 164 92 / .035) 0 1px, transparent 1px 34px),
-    repeating-linear-gradient(-45deg, rgb(201 164 92 / .035) 0 1px, transparent 1px 34px),
-    var(--bg);
-  background-attachment: fixed;
-}
-a { color: var(--gold); overflow-wrap: anywhere; }
-:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+body { margin: 0; color: var(--bone); font: 16px/1.5 var(--body);
+  background: radial-gradient(ellipse 60% 45% at 10% 0, rgb(132 20 42 / .4), transparent 70%),
+    radial-gradient(ellipse 45% 35% at 100% 15%, rgb(233 197 125 / .07), transparent 70%), var(--night);
+  background-attachment: fixed; }
+a { color: var(--foil); overflow-wrap: anywhere; }
+:focus-visible { outline: 2px solid var(--foil); outline-offset: 3px; }
 .muted { color: var(--muted); }
+.wrap { max-width: 1000px; margin: 0 auto; padding-inline: 16px; }
 
-header { text-align: center; padding: 44px 16px 28px; }
-.sigil { width: 52px; color: var(--gold); filter: drop-shadow(0 0 10px rgb(163 22 47 / .7)); }
-.kicker { margin: 10px 0 0; font: 500 12px/1 Cinzel, serif; letter-spacing: .35em; text-transform: uppercase; color: var(--muted); }
-h1 {
-  margin: 10px 0 0; font: 700 clamp(34px, 8vw, 64px)/1.05 "Cinzel Decorative", Cinzel, serif;
-  background: linear-gradient(180deg, var(--gold-light), var(--gold) 55%, var(--gold-dim));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 0 22px rgb(163 22 47 / .55));
-}
-.guest { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 12px auto 0; max-width: 360px;
-  font: 700 15px/1 Cinzel, serif; letter-spacing: .5em; text-transform: uppercase; color: var(--crimson-light); }
-.guest::before, .guest::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold-dim)); }
-.guest::after { background: linear-gradient(to left, transparent, var(--gold-dim)); }
-.discord { display: inline-block; margin-top: 24px; padding: 11px 24px; text-decoration: none;
-  font: 700 13px/1 Cinzel, serif; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-light);
-  background: linear-gradient(180deg, #b01d38, #6e0f20); border: 1px solid var(--gold);
-  box-shadow: 0 0 0 3px rgb(201 164 92 / .14), 0 8px 24px rgb(163 22 47 / .45); }
-.discord:hover { background: linear-gradient(180deg, #c8274a, #841329); color: #fff; }
+.poster { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 12px 20px; padding-block: 48px 8px; }
+.kicker { grid-column: 1 / -1; margin: 0; font: 800 14px/1 var(--cond); letter-spacing: .32em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0; font: 700 clamp(52px, 13vw, 128px)/.86 var(--gothic); text-shadow: 0 0 48px rgb(132 20 42 / .95); text-wrap: balance; }
+.stamp { margin-bottom: 10px; padding: 8px 14px 10px; transform: rotate(-8deg); border: 4px double var(--foil); border-radius: 6px;
+  color: var(--foil); text-align: center; font: 900 46px/.85 var(--cond); letter-spacing: .06em; text-transform: uppercase; }
+.stamp span { display: block; margin-top: 4px; font-size: 16px; font-weight: 800; letter-spacing: .42em; }
+.discord { justify-self: start; padding: 12px 20px; border-radius: 999px; background: var(--foil); color: var(--night); text-decoration: none;
+  font: 800 16px/1 var(--cond); letter-spacing: .14em; text-transform: uppercase; }
+.discord:hover { background: var(--bone); }
 
-main { max-width: 1000px; margin: 0 auto; padding: 0 16px 40px; }
-h2 { display: flex; align-items: center; gap: 16px; margin: 40px 0 18px;
-  font: 700 17px/1.2 Cinzel, serif; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
-h2::before, h2::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold-dim)); }
-h2::after { background: linear-gradient(to left, transparent, var(--gold-dim)); }
-.hint { text-align: center; font-style: italic; color: var(--muted); }
+h2 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin: 48px 0 16px; font: 900 32px/1 var(--cond); letter-spacing: .06em; text-transform: uppercase; }
+h2 small { font: 400 15px/1.3 var(--body); letter-spacing: 0; text-transform: none; color: var(--muted); }
 
-/* An event is an invitation card: a double gold frame with a gem on top. */
-.card { position: relative; margin-bottom: 22px; padding: 22px 24px 18px;
-  background: linear-gradient(180deg, #1d0e14, #12080b); border: 1px solid var(--gold-dim);
-  outline: 1px solid rgb(201 164 92 / .22); outline-offset: -7px;
-  box-shadow: 0 12px 32px rgb(0 0 0 / .55), inset 0 0 48px rgb(163 22 47 / .13); }
-.card::before { content: "◆"; position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
-  padding: 0 8px; background: var(--bg); color: var(--crimson-light); font-size: 13px; line-height: 1; }
-.card h3 { margin: 0; font: 700 21px/1.25 Cinzel, serif; color: var(--text); }
-.when { margin-top: 2px; font-style: italic; color: var(--gold); }
-.desc { white-space: pre-wrap; margin: 10px 0 0; }
-.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 20px;
-  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
-.cols b { font: 700 12px/1.4 Cinzel, serif; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
-.cols ul { list-style: none; margin: 6px 0 0; padding: 0; }
-.cols li::before { content: "◆"; margin-right: 8px; font-size: 8px; vertical-align: 3px; color: var(--crimson-light); }
-.roles { margin: 10px 0 0; font-size: 15px; color: var(--muted); }
+.wanted { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 36px; padding: 14px 18px; border: 1px dashed var(--foil); border-radius: 10px; }
+.wanted > b { font: 900 22px/1 var(--cond); letter-spacing: .14em; text-transform: uppercase; color: var(--foil); }
+.wanted .who { font: 800 22px/1 var(--cond); letter-spacing: .06em; text-transform: uppercase; }
+.wanted span:last-child { color: var(--muted); }
 
-details summary { cursor: pointer; text-align: center; font-style: italic; color: var(--muted); margin-bottom: 18px; }
-details summary:hover { color: var(--gold); }
+/* a ticket: the stub, a perforation with two notches, the main part */
+.ticket { --stub: 112px; display: grid; grid-template-columns: var(--stub) minmax(0, 1fr); margin-bottom: 16px; border-radius: 10px;
+  background: linear-gradient(105deg, var(--ticket), var(--ticket-deep));
+  -webkit-mask: radial-gradient(circle 11px at var(--stub) 0, #0000 98%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle 11px at var(--stub) 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+  mask: radial-gradient(circle 11px at var(--stub) 0, #0000 98%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle 11px at var(--stub) 100%, #0000 98%, #000) bottom / 100% 51% no-repeat; }
+.stub { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 18px 6px; border-right: 2px dashed rgb(0 0 0 / .5); background: rgb(0 0 0 / .2); text-align: center; }
+.stub .wd { font: 800 14px/1 var(--cond); letter-spacing: .22em; text-transform: uppercase; color: var(--foil); }
+.stub .d { font: 900 58px/.95 var(--cond); }
+.stub .m { font: 800 16px/1 var(--cond); letter-spacing: .22em; text-transform: uppercase; }
+.stub .t { margin-top: 10px; padding: 3px 8px; border: 1px solid rgb(233 197 125 / .6); border-radius: 3px; color: var(--foil); font: 800 16px/1 var(--cond); letter-spacing: .08em; }
+.tmain { min-width: 0; padding: 18px 22px 16px; }
+.ttop { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 14px; }
+.ticket h3 { margin: 0; font: 900 clamp(26px, 4.4vw, 34px)/1 var(--cond); letter-spacing: .03em; text-transform: uppercase; text-wrap: balance; }
+.admit { padding: 4px 8px; border: 1px solid rgb(233 197 125 / .5); border-radius: 3px; color: var(--foil); font: 800 13px/1 var(--cond); letter-spacing: .18em; text-transform: uppercase; white-space: nowrap; }
+.rel { margin: 6px 0 0; font-size: 15px; color: rgb(243 233 229 / .75); }
+.desc { max-width: 70ch; margin: 10px 0 0; white-space: pre-wrap; }
+.lineup { display: grid; gap: 8px; margin-top: 14px; }
+.chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.lbl { min-width: 64px; font: 800 14px/1 var(--cond); letter-spacing: .16em; text-transform: uppercase; color: var(--foil); }
+.chip { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; padding: 4px 11px 4px 9px; border-radius: 999px; background: rgb(14 10 17 / .72); font-size: 15px; line-height: 1.2; }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.chip small { color: var(--muted); }
+.chip em { color: var(--foil); font-size: 13px; }
+.meta { margin: 12px 0 0; font-size: 14px; color: rgb(243 233 229 / .78); }
+.meta b { color: var(--bone); }
+.meta + .meta { margin-top: 4px; }
+.meta [class^="c-"] { color: inherit; } /* class colors don't read on crimson; the chips carry them */
+.hint { margin: 4px 0 0; font-size: 15px; color: var(--muted); }
+.past > summary { cursor: pointer; margin-bottom: 16px; color: var(--muted); }
+.past > summary:hover { color: var(--foil); }
+.ticket.used { filter: grayscale(.8) brightness(.75); }
 
-.table-wrap { overflow-x: auto; background: rgb(23 12 16 / .88); border: 1px solid var(--gold-dim);
-  box-shadow: 0 12px 32px rgb(0 0 0 / .5); }
-table { border-collapse: collapse; width: 100%; font-size: 16px; }
-th, td { padding: 8px 14px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
-thead th { background: var(--surface-2); border-bottom-color: var(--gold-dim);
-  font: 700 11px/1.2 Cinzel, serif; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+/* the top three, as passes */
+.podium { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+.pass { position: relative; overflow: hidden; padding: 16px 18px; border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(160deg, var(--velvet), var(--night)); }
+.pass:first-child { border-color: rgb(233 197 125 / .65); }
+.pass::after { content: attr(data-rank); position: absolute; right: 8px; bottom: -26px; font: 900 128px/1 var(--cond); color: rgb(255 255 255 / .05); }
+.pass .no { font: 800 13px/1 var(--cond); letter-spacing: .2em; text-transform: uppercase; color: var(--foil); }
+.pass .name { display: block; margin-top: 8px; font: 900 28px/1 var(--cond); letter-spacing: .03em; text-transform: uppercase; overflow-wrap: anywhere; }
+.pass .hk { margin-top: 10px; font: 900 42px/1 var(--cond); font-variant-numeric: tabular-nums; }
+.pass .hk small { margin-left: 4px; font-size: 18px; color: var(--muted); }
+.pass p { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: rgb(26 16 32 / .75); }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { padding: 8px 12px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+thead th { background: var(--velvet); color: var(--foil); font: 800 13px/1 var(--cond); letter-spacing: .14em; text-transform: uppercase; }
 tbody tr:last-child > * { border-bottom: 0; }
-tbody tr:hover { background: rgb(163 22 47 / .12); }
+tbody tr:hover { background: rgb(132 20 42 / .2); }
 .num { text-align: right; font-variant-numeric: tabular-nums; }
-.rank { color: var(--muted); }
-tbody tr:nth-child(-n+3) .rank { color: var(--gold); font-weight: 600; } /* top 3 by HK */
-.tag { margin-left: 6px; padding: 1px 6px; vertical-align: 2px; border: 1px solid var(--gold-dim);
-  font: 700 10px/1.4 Cinzel, serif; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
-.tag.main { background: var(--crimson); border-color: var(--crimson-light); color: var(--gold-light); }
+.rank { color: var(--muted); font: 800 17px/1 var(--cond); }
+/* total HK as a bar growing from the right, behind the number */
+.hk { background: linear-gradient(to left, rgb(200 36 63 / .45) var(--w), transparent var(--w)) right center / 100% 55% no-repeat; }
+.mainpill { margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: var(--ticket); font: 800 11px/1.4 var(--cond); letter-spacing: .14em; text-transform: uppercase; vertical-align: 1px; }
+.prof { width: 20px; height: 20px; margin-right: 3px; border-radius: 4px; vertical-align: middle; }
 
-footer { padding: 28px 16px 36px; text-align: center; font: 500 11px/1.6 Cinzel, serif; letter-spacing: .25em;
-  text-transform: uppercase; color: var(--gold-dim); }
+footer.wrap { padding-block: 32px 40px; color: var(--muted); font: 800 13px/1.4 var(--cond); letter-spacing: .24em; text-transform: uppercase; }
 
 /* WoW class colors */
 .c-Warrior { color: #c69b6d; } .c-Paladin { color: #f48cba; } .c-Hunter { color: #aad372; } .c-Rogue { color: #fff468; }
 .c-Priest { color: #ffffff; } .c-Shaman { color: #0070dd; } .c-Mage { color: #3fc7eb; } .c-Warlock { color: #8788ee; } .c-Druid { color: #ff7c0a; }
-.prof { width: 20px; height: 20px; border-radius: 3px; vertical-align: middle; margin-right: 3px; }
+
+@media (max-width: 640px) {
+  .podium { grid-template-columns: minmax(0, 1fr); }
+  .ticket { --stub: 80px; }
+  .stub { justify-content: flex-start; }
+  .stub .d { font-size: 44px; }
+  .tmain { padding: 14px 14px 12px; }
+  .lbl { min-width: 0; flex-basis: 100%; }
+  .stamp { font-size: 32px; padding: 6px 10px 8px; }
+  .stamp span { font-size: 12px; }
+}
 </style>
 </head>
 <body>
-<header>
-  <svg class="sigil" viewBox="0 0 64 80" aria-hidden="true">
-    <path d="M8 78V36Q8 14 32 2Q56 14 56 36V78" fill="none" stroke="currentColor" stroke-width="2.5"/>
-    <path d="M16 78V38Q16 22 32 12Q48 22 48 38V78" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/>
-    <path d="M32 27L40 41L32 55L24 41Z" fill="#a3162f" stroke="currentColor" stroke-width="1.5"/>
-    <path d="M32 55V78M2 78H62" stroke="currentColor" stroke-width="2.5"/>
-  </svg>
+<header class="poster wrap">
   <p class="kicker">Revendreth · By invitation only</p>
   <h1>Castle Nathria</h1>
-  <p class="guest">VIP Guest</p>
-  <a id="discord" class="discord" hidden>Join us on Discord</a>
+  <div class="stamp">VIP<span>Guest</span></div>
+  <a id="discord" class="discord" hidden>Get on the list · Discord</a>
 </header>
-<main id="app"><p class="hint">Loading…</p></main>
-<footer>Castle Nathria VIP Guest · World of Warcraft: Forever</footer>
+<main id="app" class="wrap"><p class="hint">Loading…</p></main>
+<footer class="wrap">Castle Nathria VIP Guest · World of Warcraft: Forever</footer>
 <script>
 // Names come from Discord: everything from the data goes through esc().
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => `&#${c.charCodeAt(0)};`);
 const ROLES = { tank: 'Tank', heal: 'Heal', dps: 'DPS' };
-const STATUS = [['yes', 'Going'], ['maybe', 'Maybe'], ['no', 'Not going']];
-const date = t => new Date(t * 1000).toLocaleString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+const CLASSES = ['Warrior', 'Paladin', 'Hunter', 'Rogue', 'Priest', 'Shaman', 'Mage', 'Warlock', 'Druid'];
+// "tomorrow", "in 3 days" by calendar day; "in 5 hours" today.
+const rel = t => {
+  const f = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  const days = Math.round((new Date(t * 1000).setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) / 864e5);
+  return days ? f.format(days, 'day') : f.format(Math.round((t * 1000 - Date.now()) / 36e5), 'hour');
+};
 const character = (name, cls) => `<span class="c-${esc(cls)}">${esc(name)}</span>`;
-// Profession icons (Bot.PROFESSIONS) from Wowhead's CDN; the name and skill ("First Aid 150") show on hover.
 const ICONS = { Alchemy: 'trade_alchemy', Blacksmithing: 'trade_blacksmithing', Enchanting: 'trade_engraving',
   Engineering: 'trade_engineering', Herbalism: 'spell_nature_naturetouchgrow', Leatherworking: 'inv_misc_armorkit_17',
   Mining: 'trade_mining', Skinning: 'inv_misc_pelt_wolf_01', Tailoring: 'trade_tailoring', Cooking: 'inv_misc_food_15',
   'First Aid': 'spell_holy_sealofsacrifice', Fishing: 'trade_fishing' };
 const professions = p => (p ? p.split(', ') : []).map(n => `<img class="prof" src="https://wow.zamimg.com/images/wow/icons/medium/${ICONS[n.replace(/ \d+$/, '')] ?? 'inv_misc_questionmark'}.jpg" alt="${esc(n)}" title="${esc(n)}">`).join('');
-const CLASSES = ['Warrior', 'Paladin', 'Hunter', 'Rogue', 'Priest', 'Shaman', 'Mage', 'Warlock', 'Druid'];
 const classCount = list => CLASSES.map(c => [c, list.filter(s => s.class === c).length]).filter(([, n]) => n)
   .map(([c, n]) => `<span class="c-${c}">${c}</span> ${n}`).join(' · ');
-const who = s => esc(s.player) + (s.character ? ` · ${character(s.character, s.class)}` : '') + (s.role ? `<span class="tag">${ROLES[s.role] ?? ''}</span>` : '')
-  + (s.note ? ` <i class="muted">- ${esc(s.note)}</i>` : '');
+const by = (e, status) => e.signups.filter(s => s.status === status);
+const chip = s => `<span class="chip"><i class="dot c-${esc(s.class)}"></i>${s.character ? character(s.character, s.class) + ` <small>${esc(s.player)}</small>` : esc(s.player)}${s.note ? `<em>${esc(s.note)}</em>` : ''}</span>`;
+const plain = s => (s.character ? `${character(s.character, s.class)} (${esc(s.player)})` : esc(s.player)) + (s.note ? ` <i>- ${esc(s.note)}</i>` : '');
+const ticket = (e, used) => {
+  const d = new Date(e.startsAt * 1000), part = o => d.toLocaleString('en-GB', o), yes = by(e, 'yes'), maybe = by(e, 'maybe'), no = by(e, 'no');
+  const lineup = Object.entries(ROLES).map(([r, label]) => [label, yes.filter(s => s.role === r)]);
+  if (yes.some(s => !ROLES[s.role])) lineup.push(['No role', yes.filter(s => !ROLES[s.role])]);
+  return `<article class="ticket${used ? ' used' : ''}">
+    <div class="stub"><span class="wd">${part({ weekday: 'short' })}</span><span class="d">${d.getDate()}</span><span class="m">${part({ month: 'short' })}</span>
+      <span class="t">${part({ hour: '2-digit', minute: '2-digit' })}</span></div>
+    <div class="tmain">
+      <div class="ttop"><h3>${esc(e.title)}</h3><span class="admit">Admit · ${e.minLevel ? `level ${Number(e.minLevel)}+` : 'all levels'}</span></div>
+      <p class="rel">${part({ weekday: 'long', day: 'numeric', month: 'long' })}${used ? '' : ` · ${rel(e.startsAt)}`}</p>
+      ${e.description ? `<p class="desc">${esc(e.description)}</p>` : ''}
+      ${yes.length ? `<div class="lineup">${lineup.map(([label, list]) => `<div class="chips"><span class="lbl">${label} ${list.length}</span>${list.map(chip).join('')}</div>`).join('')}</div>`
+        : '<p class="meta">Nobody on the list yet.</p>'}
+      ${maybe.length ? `<p class="meta"><b>Maybe:</b> ${maybe.map(plain).join(', ')}</p>` : ''}
+      ${no.length ? `<p class="meta"><b>Not going:</b> ${no.map(plain).join(', ')}</p>` : ''}
+      ${yes.length ? `<p class="meta"><b>${yes.length}</b> going · ${classCount(yes)}</p>` : ''}
+    </div>
+  </article>`;
+};
+const pass = (c, i) => `<div class="pass" data-rank="${i + 1}"><span class="no">No. ${i + 1} · Honorable kills</span>
+  <span class="name c-${esc(c.class)}">${esc(c.name)}</span><div class="hk">${Number(c.hk).toLocaleString('en-GB')}<small>HK</small></div>
+  <p>${esc(c.class)}${c.level == null ? '' : ` · level ${Number(c.level)}`} · ${esc(c.player)}</p></div>`;
 
 function render({ events, characters, discord, recruiting }) {
   if (discord) Object.assign(document.getElementById('discord'), { href: discord, hidden: false });
   const ics = new URL('guild.ics', location.href).href; // pushed with guild.js
   const now = Date.now() / 1000;
   const upcoming = events.filter(e => e.startsAt >= now), past = events.filter(e => e.startsAt < now).reverse();
-  const card = e => {
-    const yes = e.signups.filter(s => s.status === 'yes');
-    return `<div class="card">
-      <h3>${esc(e.title)}</h3><div class="when">${date(e.startsAt)}${e.minLevel ? ` · level ${Number(e.minLevel)}+` : ''}</div>
-      ${e.description ? `<p class="desc">${esc(e.description)}</p>` : ''}
-      <div class="cols">${STATUS.map(([status, label]) => {
-        const list = e.signups.filter(s => s.status === status);
-        return `<div><b>${label} (${list.length})</b><ul>${list.map(s => `<li>${who(s)}</li>`).join('')}</ul></div>`;
-      }).join('')}</div>
-      ${yes.length ? `<p class="roles">${['tank', 'heal', 'dps'].map(r => `${ROLES[r]} ${yes.filter(s => s.role === r).length}`).join(' · ')}<br>${classCount(yes)}</p>` : ''}
-    </div>`;
-  };
+  const wanted = recruiting ? [...recruiting.classes.filter(c => CLASSES.includes(c)).map(c => `<span class="c-${c}">${c}</span>`),
+    ...recruiting.roles.map(r => esc(ROLES[r] ?? r))] : [];
+  const top = characters.slice(0, 3).filter(c => Number(c.hk) > 0);
+  const most = Math.max(1, ...characters.map(c => Number(c.hk) || 0));
   document.getElementById('app').innerHTML = `
-    ${recruiting && (recruiting.classes.length || recruiting.roles.length) ? `<h2>Recruiting</h2>
-    <p class="hint">We're looking for ${[...recruiting.classes.filter(c => CLASSES.includes(c)).map(c => `<span class="c-${c}">${c}</span>`),
-      ...recruiting.roles.map(r => esc(ROLES[r] ?? r))].join(' · ')} - join our Discord and type <b>/apply</b>.</p>` : ''}
-    <h2>Upcoming events</h2>
-    ${upcoming.map(card).join('') || '<p class="hint">No events planned.</p>'}
-    <p class="hint">Sign up on Discord, with the buttons under the event's post.</p>
+    ${wanted.length ? `<div class="wanted"><b>Wanted</b><span class="who">${wanted.join(' · ')}</span><span>Join our Discord and type <b>/apply</b>.</span></div>` : ''}
+    <h2>Upcoming <small>Sign up on Discord, with the buttons under the event's post.</small></h2>
+    ${upcoming.map(e => ticket(e)).join('') || '<p class="hint">No events planned.</p>'}
     <p class="hint">Events in your own calendar: add <a href="${esc(ics)}">${esc(ics)}</a> as a calendar from URL
       (Google Calendar: Other calendars → From URL; Proton Calendar: Add calendar from URL).</p>
-    <h2>Characters</h2>
+    <h2>Guest list <small>Characters by honorable kills</small></h2>
+    ${top.length ? `<div class="podium">${top.map(pass).join('')}</div>` : ''}
     <div class="table-wrap"><table>
       <thead><tr><th class="num">#</th><th>Character</th><th class="num">Level</th><th>Class</th><th>Role</th><th>Professions</th><th class="num">Total HK</th><th class="num">World HK</th><th>Player</th></tr></thead>
       <tbody>${characters.map((c, i) => `<tr><td class="num rank">${i + 1}</td>
-        <td>${c.main ? `<b>${character(c.name, c.class)}</b><span class="tag main">main</span>` : character(c.name, c.class)}</td>
-        <td class="num">${c.level == null ? '' : Number(c.level)}</td><td>${esc(c.class)}</td><td>${ROLES[c.role] ?? ''}</td><td>${professions(c.professions)}</td><td class="num">${Number(c.hk)}</td><td class="num">${Number(c.world_hk)}</td><td>${esc(c.player)}</td></tr>`).join('')
+        <td>${c.main ? `<b>${character(c.name, c.class)}</b><span class="mainpill">main</span>` : character(c.name, c.class)}</td>
+        <td class="num">${c.level == null ? '' : Number(c.level)}</td><td>${esc(c.class)}</td><td>${ROLES[c.role] ?? ''}</td><td>${professions(c.professions)}</td>
+        <td class="num hk" style="--w:${(Number(c.hk) || 0) / most * 100}%">${Number(c.hk)}</td><td class="num">${Number(c.world_hk)}</td><td>${esc(c.player)}</td></tr>`).join('')
         || '<tr><td colspan="9" class="muted">No one has added a character yet (on Discord: /character add).</td></tr>'}</tbody>
     </table></div>
-    ${past.length ? `<h2>Past events</h2><details><summary>Show (${past.length})</summary>${past.map(card).join('')}</details>` : ''}`;
+    ${past.length ? `<h2>Past events</h2><details class="past"><summary>Show (${past.length})</summary>${past.map(e => ticket(e, true)).join('')}</details>` : ''}`;
 }
 
 // Loaded by hand with a query string: GitHub Pages lets browsers cache files for 10 minutes.
