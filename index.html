@@ -122,6 +122,7 @@ tbody tr:hover { background: rgb(132 20 42 / .2); }
 .hk { background: linear-gradient(to left, rgb(200 36 63 / .45) var(--w), transparent var(--w)) right center / 100% 55% no-repeat; }
 .mainpill { margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: var(--ticket); font: 800 11px/1.4 var(--cond); letter-spacing: .14em; text-transform: uppercase; vertical-align: 1px; }
 .prof { width: 20px; height: 20px; margin-right: 3px; border-radius: 4px; vertical-align: middle; }
+.prof.max { box-shadow: 0 0 6px 2px #ffd100; } /* maxed skill (300) */
 
 footer.wrap { padding-block: 32px 40px; color: var(--muted); font: 800 13px/1.4 var(--cond); letter-spacing: .24em; text-transform: uppercase; }
 
@@ -170,7 +171,7 @@ const ICONS = { Alchemy: 'trade_alchemy', Blacksmithing: 'trade_blacksmithing', 
   Engineering: 'trade_engineering', Herbalism: 'spell_nature_naturetouchgrow', Leatherworking: 'inv_misc_armorkit_17',
   Mining: 'trade_mining', Skinning: 'inv_misc_pelt_wolf_01', Tailoring: 'trade_tailoring', Cooking: 'inv_misc_food_15',
   'First Aid': 'spell_holy_sealofsacrifice', Fishing: 'trade_fishing' };
-const professions = p => (p ? p.split(', ') : []).map(n => `<img class="prof" src="https://wow.zamimg.com/images/wow/icons/medium/${ICONS[n.replace(/ \d+$/, '')] ?? 'inv_misc_questionmark'}.jpg" alt="${esc(n)}" title="${esc(n)}">`).join('');
+const professions = p => (p ? p.split(', ') : []).map(n => `<img class="prof${/ 300$/.test(n) ? ' max' : ''}" src="https://wow.zamimg.com/images/wow/icons/medium/${ICONS[n.replace(/ \d+$/, '')] ?? 'inv_misc_questionmark'}.jpg" alt="${esc(n)}" title="${esc(n)}">`).join('');
 const classCount = list => CLASSES.map(c => [c, list.filter(s => s.class === c).length]).filter(([, n]) => n)
   .map(([c, n]) => `<span class="c-${c}">${c}</span> ${n}`).join(' · ');
 const by = (e, status) => e.signups.filter(s => s.status === status);
